@@ -1,7 +1,9 @@
 from django.test import TestCase
+from django.core.urlresolvers import resolve
+from lists.views import home_page
 
-# Create your tests here.
-class SmokeTest(TestCase):
+class HomePageTest(TestCase):
 
-	def test_sample(self):
-		self.assertEqual(2, 3)
+	def test_root_resolves_homepage(self):
+		found = resolve('/')
+		self.assertEqual(found.func, home_page)

@@ -22,13 +22,20 @@ class BasicTest(unittest.TestCase):
 		header_text = self.browser.find_element_by_tag_name('h1').text
 		self.assertIn('To-Do', header_text)
 
-		inputbox = self.browser.find_element_by_id('uname_id')
-		self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter username')
+		username_box = self.browser.find_element_by_id('uname_id')
+		password_box = self.browser.find_element_by_id('pwd_id')
+		self.assertEqual(username_box.get_attribute('placeholder'), 'Enter username')
+		self.assertEqual(password_box.get_attribute('placeholder'), 'Enter password')
 
-		inputbox.send_keys('Luke')
-		inputbox.send_keys(Keys.ENTER)
+		username_box.send_keys('Luke')
+		password_box.send_keys('Skywalker')
+		username_box.send_keys(Keys.ENTER)
+		password_box.send_keys(Keys.ENTER)
+
 		self.check_row_in_list_table('1: Luke')
+		self.check_row_in_list_table('1: SkyWalker')
 		self.check_row_in_list_table('2: Kylo')
+		self.check_row_in_list_table('2: Ren')
 
 		self.fail('Finished')
 

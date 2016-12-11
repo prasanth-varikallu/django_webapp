@@ -14,7 +14,7 @@ class BasicTest(unittest.TestCase):
 		table = self.browser.find_element_by_id('id_list_table')
 		rows = table.find_elements_by_tag_name('tr')
 		self.assertIn(row_text, [row.text for row in rows])
-	
+
 	def test_can_start_list_retrieve_it(self):
 		self.browser.get('http://localhost:8000')
 
@@ -22,16 +22,13 @@ class BasicTest(unittest.TestCase):
 		header_text = self.browser.find_element_by_tag_name('h1').text
 		self.assertIn('To-Do', header_text)
 
-		inputbox = self.browser.find_element_by_id('id_new_item')
-		self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
+		inputbox = self.browser.find_element_by_id('uname_id')
+		self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter username')
 
-		inputbox.send_keys('Buy peacock feathers')
+		inputbox.send_keys('Luke')
 		inputbox.send_keys(Keys.ENTER)
-
-		table = self.browser.find_element_by_id('id_list_table')
-		rows = table.find_elements_by_tag_name('tr')
-		self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
-		self.assertIn('2: Use peacock feathers to make a fly', [row.text for row in rows])
+		self.check_row_in_list_table('1: Luke')
+		self.check_row_in_list_table('2: Kylo')
 
 		self.fail('Finished')
 

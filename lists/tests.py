@@ -18,11 +18,6 @@ class HomePageTest(TestCase):
 		self.client.get('/')
 		self.assertEqual(User.objects.count(), 0)
 
-	def test_can_save_a_POST_request(self):
-	    response = self.client.post('/', data={'username': 'Luke', 'password': 'Skywalker'})
-	    self.assertIn('Luke', response.content.decode())
-	    self.assertIn('Skywalker', response.content.decode())
-	    self.assertTemplateUsed(response, 'home.html')
 
 class UserModelTest(TestCase):
 	def test_saving_retrieving_usernames(self):
@@ -52,7 +47,8 @@ class UserModelTest(TestCase):
 		new_user = User.objects.first()
 		self.assertEqual(new_user.username, 'Hans')
 		self.assertEqual(new_user.password, 'Solo')
-
-		self.assertIn('Hans', response.content.decode())
-		self.assertIn('Solo', response.content.decode())
-		self.assertTemplateUsed(response, 'home.html')
+	
+	def test_redirect_after_POST(self, ):
+		response = self.client.post('/', data={'username': 'Hans', 'password': 'Solo', })
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response['location'], '/')

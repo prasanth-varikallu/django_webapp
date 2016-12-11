@@ -18,5 +18,6 @@ from lists import views
 
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
-    url(r'^orders/first-order-ever/$', views.view_list, name='view_list')
+    url(r'^orders/new$', views.new_order, name='new_order'),
+    url(r'^orders/first-order-ever/$', views.view_list, name='view_list'),
 ]

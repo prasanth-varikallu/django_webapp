@@ -26,7 +26,7 @@ class BasicTest(LiveServerTestCase):
 
 		self.assertIn('NoWait', self.browser.title)
 		header_text = self.browser.find_element_by_tag_name('h1').text
-		self.assertIn('Your Order', header_text)
+		self.assertIn('Start new order', header_text)
 
 		self.identify_text_box_button()
 		self.assertEqual(self.mainDish_box.get_attribute('placeholder'), 'Enter main dish')

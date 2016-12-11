@@ -6,17 +6,9 @@ from lists.models import Food
 
 class HomePageTest(TestCase):
 
-	def test_root_resolves_homepage(self):
-		found = resolve('/')
-		self.assertEqual(found.func, home_page)
-
 	def test_homepage_return_correct_html(self):
 		response = self.client.get('/')
 		self.assertTemplateUsed(response, 'home.html')
-
-	def test_only_save_foods_when_necessary(self):
-		self.client.get('/')
-		self.assertEqual(Food.objects.count(), 0)
 
 
 class foodModelTest(TestCase):
@@ -41,18 +33,6 @@ class foodModelTest(TestCase):
 		self.assertEqual(second_saved_food.main_dish, 'Hoagie')
 		self.assertEqual(second_saved_food.side_dish, 'Pickle')
 
-	def test_save_POST_food(self,):
-		response = self.client.post('/', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
-		self.assertEqual(Food.objects.count(), 1)
-		new_food = Food.objects.first()
-		self.assertEqual(new_food.main_dish, 'Salad')
-		self.assertEqual(new_food.side_dish, 'Soup')
-	
-	def test_redirect_after_POST(self, ):
-		response = self.client.post('/', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
-		self.assertEqual(response.status_code, 302)
-		self.assertEqual(response['location'], '/orders/first-order-ever/')
-
 class ListViewTest(TestCase):
 
 	def test_use_orders_template(self,):
@@ -68,3 +48,16 @@ class ListViewTest(TestCase):
 		self.assertContains(response, 'Chips')
 		self.assertContains(response, 'Wrap')
 		self.assertContains(response, 'Cookie')
+
+class NewOrderTest(TestCase):
+
+	def test_save_POST_food(self,):
+		response = self.client.post('/orders/new', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
+		self.assertEqual(Food.objects.count(), 1)
+		new_food = Food.objects.first()
+		self.assertEqual(new_food.main_dish, 'Salad')
+		self.assertEqual(new_food.side_dish, 'Soup')
+	
+	def test_redirect_after_POST(self,):
+		response = self.client.post('/orders/new', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
+		self.assertRedirects(response, '/orders/first-order-ever/')

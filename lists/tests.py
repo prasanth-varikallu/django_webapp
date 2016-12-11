@@ -18,16 +18,6 @@ class HomePageTest(TestCase):
 		self.client.get('/')
 		self.assertEqual(Food.objects.count(), 0)
 
-	def test_display_all_foods(self):
-		Food.objects.create(main_dish='Sandwitch', side_dish='Chips')
-		Food.objects.create(main_dish='Wrap', side_dish='Cookie')
-
-		response = self.client.get('/')
-		self.assertIn('Sandwitch', response.content.decode())
-		self.assertIn('Chips', response.content.decode())
-		self.assertIn('Wrap', response.content.decode())
-		self.assertIn('Cookie', response.content.decode())
-
 
 class foodModelTest(TestCase):
 	def test_saving_retrieving_food(self):
@@ -61,4 +51,20 @@ class foodModelTest(TestCase):
 	def test_redirect_after_POST(self, ):
 		response = self.client.post('/', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
 		self.assertEqual(response.status_code, 302)
-		self.assertEqual(response['location'], '/')
+		self.assertEqual(response['location'], '/orders/first-order-ever/')
+
+class ListViewTest(TestCase):
+
+	def test_use_orders_template(self,):
+		response = self.client.get('/orders/first-order-ever/')
+		self.assertTemplateUsed(response, 'order.html')
+
+	def test_display_all(self,):
+		Food.objects.create(main_dish='Sandwitch', side_dish='Chips')
+		Food.objects.create(main_dish='Wrap', side_dish='Cookie')
+
+		response = self.client.get('/orders/first-order-ever/')
+		self.assertContains(response, 'Sandwitch')
+		self.assertContains(response, 'Chips')
+		self.assertContains(response, 'Wrap')
+		self.assertContains(response, 'Cookie')

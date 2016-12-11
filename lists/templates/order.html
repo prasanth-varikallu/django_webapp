@@ -3,14 +3,22 @@
         <title>NoWait</title>
     </head>
     <body>
-        <h1>Start new order</h1>
+        <h1>Your Order</h1>
         
-       <form method="POST">
+       <form method="POST" action="/">
     	<input name="main_dish" id="main_dish_id" placeholder="Enter main dish" />
     	<input name="side_dish" id="side_dish_id" placeholder="Enter side dish" />
     	<button name="button" value="OK" type="submit">Click Me</button>
     	{% csrf_token %}
 	   </form>
 
+	   <table id="id_list_table">
+	   {% for item in items %}
+	   <tr>
+	   		<td>{{ forloop.counter }}: {{item.main_dish}}</td>
+	   		<td>{{item.side_dish}}</td>
+	   </tr>
+	   {% endfor %}
+	   </table>
     </body>
 </html>

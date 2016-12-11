@@ -21,7 +21,7 @@ class BasicTest(LiveServerTestCase):
 		self.sideDish_box = self.browser.find_element_by_id('side_dish_id')
 		self.button_box = self.browser.find_element_by_tag_name('button')
 
-	def test_can_start_list_retrieve_it(self):
+	def test_can_start_order_single_user(self,):
 		self.browser.get(self.live_server_url)
 
 		self.assertIn('NoWait', self.browser.title)
@@ -43,10 +43,43 @@ class BasicTest(LiveServerTestCase):
 		self.check_row_in_list_table('1: Pizza Chips')
 		self.check_row_in_list_table('2: Hoagie Pickle')
 		
+	def test_multiple_orders_multiple_urls(self,):
+		self.browser.get(self.live_server_url)
 
-		self.fail('Finished')
+		self.identify_text_box_button()
+		self.mainDish_box.send_keys('Hoagie')
+		self.sideDish_box.send_keys('Pickle')
+		self.button_box.click()
 
+		self.check_row_in_list_table('1: Hoagie Pickle')
+		first_order_url = self.browser.current_url
+		self.assertRegex(first_order_url, '/orders/.+')
 
+		# New order
+		self.browser.quit()
+		self.browser = webdriver.Firefox()
+
+		self.browser.get(self.live_server_url)
+		# Check if old orderdetails are present
+		page_text = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn('Pizza Chips', page_text)
+		self.assertNotIn('Hoagie Pickle', page_text)
+
+		# Create new order
+		self.identify_text_box_button()
+		self.mainDish_box.send_keys('Salad')
+		self.sideDish_box.send_keys('Soup')
+		self.button_box.click()
+
+		# Assert new order url
+		second_order_url = self.browser.current_url
+		self.assertRegex(second_order_url, '/orders/.+')
+		self.assertNotEqual(first_order_url, second_order_url)
+
+		# Check again if old orderdetails are present
+		page_text = self.browser.find_element_by_tag_name('body').text
+		self.assertNotIn('Pizza Chips', page_text)
+		self.assertNotIn('Hoagie Pickle', page_text)
 
 if __name__ == '__main__':
 	unittest.main(warnings='ignore')

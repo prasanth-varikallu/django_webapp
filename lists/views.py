@@ -7,4 +7,5 @@ def home_page(request):
 		Food.objects.create(main_dish=request.POST['main_dish'], side_dish=request.POST['side_dish'])
 		return redirect('/')
 
-	return render(request, 'home.html')
+	items = Food.objects.all()
+	return render(request, 'home.html', {'items': items})

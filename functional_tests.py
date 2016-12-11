@@ -15,27 +15,33 @@ class BasicTest(unittest.TestCase):
 		rows = table.find_elements_by_tag_name('tr')
 		self.assertIn(row_text, [row.text for row in rows])
 
+	def identify_text_box_button(self,):
+		self.mainDish_box = self.browser.find_element_by_id('main_dish_id')
+		self.sideDish_box = self.browser.find_element_by_id('side_dish_id')
+		self.button_box = self.browser.find_element_by_tag_name('button')
+
 	def test_can_start_list_retrieve_it(self):
 		self.browser.get('http://localhost:8000')
 
-		self.assertIn('To-Do', self.browser.title)
+		self.assertIn('NoWait', self.browser.title)
 		header_text = self.browser.find_element_by_tag_name('h1').text
-		self.assertIn('To-Do', header_text)
+		self.assertIn('Your Order', header_text)
 
-		mainDish_box = self.browser.find_element_by_id('main_dish_id')
-		sideDish_box = self.browser.find_element_by_id('side_dish_id')
-		self.assertEqual(mainDish_box.get_attribute('placeholder'), 'Enter main dish')
-		self.assertEqual(sideDish_box.get_attribute('placeholder'), 'Enter side dish')
+		self.identify_text_box_button()
+		self.assertEqual(self.mainDish_box.get_attribute('placeholder'), 'Enter main dish')
+		self.assertEqual(self.sideDish_box.get_attribute('placeholder'), 'Enter side dish')
+		self.mainDish_box.send_keys('Pizza')
+		self.sideDish_box.send_keys('Chips')
+		self.button_box.click()
 
-		mainDish_box.send_keys('Pizza')
-		sideDish_box.send_keys('Chips')
-		mainDish_box.send_keys(Keys.ENTER)
-		sideDish_box.send_keys(Keys.ENTER)
+		self.identify_text_box_button()
+		self.mainDish_box.send_keys('Hoagie')
+		self.sideDish_box.send_keys('Pickle')
+		self.button_box.click()
 
-		self.check_row_in_list_table('1: Pizza')
-		self.check_row_in_list_table('1: Chips')
-		self.check_row_in_list_table('2: Hoagie')
-		self.check_row_in_list_table('2: Pickle')
+		self.check_row_in_list_table('1: Pizza Chips')
+		self.check_row_in_list_table('2: Hoagie Pickle')
+		
 
 		self.fail('Finished')
 

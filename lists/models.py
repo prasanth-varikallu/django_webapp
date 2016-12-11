@@ -1,6 +1,6 @@
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-	username = models.TextField(default='')
-	password = models.TextField(default='')
+class Food(models.Model):
+	main_dish = models.TextField(default='')
+	side_dish = models.TextField(default='')

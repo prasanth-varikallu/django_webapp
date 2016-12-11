@@ -6,14 +6,14 @@
         <h1>Your To-Do list</h1>
         
        <form method="POST">
-    	<input name="username" id="uname_id" placeholder="Enter username" />
-    	<input name="password" id="pwd_id" placeholder="Enter password" />
+    	<input name="main_dish" id="main_dish_id" placeholder="Enter main dish" />
+    	<input name="side_dish" id="side_dish_id" placeholder="Enter side dish" />
     	{% csrf_token %}
 	   </form>
 
 	   <table id="id_list_table">
-	   <tr><td>1: {{entered_username}}</td></tr>
-	   <tr><td>1: {{entered_password}}</td></tr>
+	   <tr><td>1: {{entered_main_dish}}</td></tr>
+	   <tr><td>1: {{entered_side_dish}}</td></tr>
 	   </table>
     </body>
 </html>

@@ -22,20 +22,20 @@ class BasicTest(unittest.TestCase):
 		header_text = self.browser.find_element_by_tag_name('h1').text
 		self.assertIn('To-Do', header_text)
 
-		username_box = self.browser.find_element_by_id('uname_id')
-		password_box = self.browser.find_element_by_id('pwd_id')
-		self.assertEqual(username_box.get_attribute('placeholder'), 'Enter username')
-		self.assertEqual(password_box.get_attribute('placeholder'), 'Enter password')
+		mainDish_box = self.browser.find_element_by_id('main_dish_id')
+		sideDish_box = self.browser.find_element_by_id('side_dish_id')
+		self.assertEqual(mainDish_box.get_attribute('placeholder'), 'Enter main dish')
+		self.assertEqual(sideDish_box.get_attribute('placeholder'), 'Enter side dish')
 
-		username_box.send_keys('Luke')
-		password_box.send_keys('Skywalker')
-		username_box.send_keys(Keys.ENTER)
-		password_box.send_keys(Keys.ENTER)
+		mainDish_box.send_keys('Pizza')
+		sideDish_box.send_keys('Chips')
+		mainDish_box.send_keys(Keys.ENTER)
+		sideDish_box.send_keys(Keys.ENTER)
 
-		self.check_row_in_list_table('1: Luke')
-		self.check_row_in_list_table('1: SkyWalker')
-		self.check_row_in_list_table('2: Kylo')
-		self.check_row_in_list_table('2: Ren')
+		self.check_row_in_list_table('1: Pizza')
+		self.check_row_in_list_table('1: Chips')
+		self.check_row_in_list_table('2: Hoagie')
+		self.check_row_in_list_table('2: Pickle')
 
 		self.fail('Finished')
 

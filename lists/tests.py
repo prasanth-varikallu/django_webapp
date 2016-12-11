@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from lists.views import home_page
-from lists.models import User
+from lists.models import Food
 
 class HomePageTest(TestCase):
 
@@ -14,41 +14,51 @@ class HomePageTest(TestCase):
 		response = self.client.get('/')
 		self.assertTemplateUsed(response, 'home.html')
 
-	def test_only_save_users_when_necessary(self):
+	def test_only_save_foods_when_necessary(self):
 		self.client.get('/')
-		self.assertEqual(User.objects.count(), 0)
+		self.assertEqual(Food.objects.count(), 0)
+
+	def test_display_all_foods(self):
+		Food.objects.create(main_dish='Sandwitch', side_dish='Chips')
+		Food.objects.create(main_dish='Wrap', side_dish='Cookie')
+
+		response = self.client.get('/')
+		self.assertIn('Sandwitch', response.content.decode())
+		self.assertIn('Chips', response.content.decode())
+		self.assertIn('Wrap', response.content.decode())
+		self.assertIn('Cookie', response.content.decode())
 
 
-class UserModelTest(TestCase):
-	def test_saving_retrieving_usernames(self):
-		first_user = User()
-		first_user.username = 'Luke'
-		first_user.password = 'Skywalker'
-		first_user.save()
+class foodModelTest(TestCase):
+	def test_saving_retrieving_food(self):
+		first_food = Food()
+		first_food.main_dish = 'Pizza'
+		first_food.side_dish = 'Chips'
+		first_food.save()
 
-		second_user = User()
-		second_user.username = 'Kylo'
-		second_user.password = 'Ren'
-		second_user.save()
+		second_food = Food()
+		second_food.main_dish = 'Hoagie'
+		second_food.side_dish = 'Pickle'
+		second_food.save()
 
-		saved_users = User.objects.all()
-		self.assertEqual(saved_users.count(), 2)
+		saved_foods = Food.objects.all()
+		self.assertEqual(saved_foods.count(), 2)
 
-		first_saved_user = saved_users[0]
-		second_saved_user = saved_users[1]
-		self.assertEqual(first_saved_user.username, 'Luke')
-		self.assertEqual(first_saved_user.password, 'Skywalker')
-		self.assertEqual(second_saved_user.username, 'Kylo')
-		self.assertEqual(second_saved_user.password, 'Ren')
+		first_saved_food = saved_foods[0]
+		second_saved_food = saved_foods[1]
+		self.assertEqual(first_saved_food.main_dish, 'Pizza')
+		self.assertEqual(first_saved_food.side_dish, 'Chips')
+		self.assertEqual(second_saved_food.main_dish, 'Hoagie')
+		self.assertEqual(second_saved_food.side_dish, 'Pickle')
 
-	def test_save_POST_user(self,):
-		response = self.client.post('/', data={'username': 'Hans', 'password': 'Solo', })
-		self.assertEqual(User.objects.count(), 1)
-		new_user = User.objects.first()
-		self.assertEqual(new_user.username, 'Hans')
-		self.assertEqual(new_user.password, 'Solo')
+	def test_save_POST_food(self,):
+		response = self.client.post('/', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
+		self.assertEqual(Food.objects.count(), 1)
+		new_food = Food.objects.first()
+		self.assertEqual(new_food.main_dish, 'Salad')
+		self.assertEqual(new_food.side_dish, 'Soup')
 	
 	def test_redirect_after_POST(self, ):
-		response = self.client.post('/', data={'username': 'Hans', 'password': 'Solo', })
+		response = self.client.post('/', data={'main_dish': 'Salad', 'side_dish': 'Soup', })
 		self.assertEqual(response.status_code, 302)
 		self.assertEqual(response['location'], '/')

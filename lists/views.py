@@ -3,9 +3,11 @@ from django.http import HttpResponse
 from lists.models import User
 # Create your views here.
 def home_page(request):
+	if request.method == 'POST':
+		entered_username, entered_password = request.POST['username'], request.POST['password']
+		User.objects.create(username=entered_username, password=entered_password)
+	else:
+		entered_username = ''
+		entered_password = ''
 
-	user = User()
-	user.username = request.POST.get('username', '')
-	user.password = request.POST.get('password', '')
-	user.save()
-	return render(request, 'home.html', {'entered_username': request.POST.get('username', ''), 'entered_password': request.POST.get('password', '')})
+	return render(request, 'home.html', {'entered_username': entered_username, 'entered_password': entered_password})

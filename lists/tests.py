@@ -14,6 +14,10 @@ class HomePageTest(TestCase):
 		response = self.client.get('/')
 		self.assertTemplateUsed(response, 'home.html')
 
+	def test_only_save_users_when_necessary(self):
+		self.client.get('/')
+		self.assertEqual(User.objects.count(), 0)
+
 	def test_can_save_a_POST_request(self):
 	    response = self.client.post('/', data={'username': 'Luke', 'password': 'Skywalker'})
 	    self.assertIn('Luke', response.content.decode())
